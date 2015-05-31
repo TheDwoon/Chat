@@ -1,10 +1,5 @@
 package edu.kit.fsmi.schnupperstudium.chat.common;
 
-
-public interface MessageReceiver {
-
-	String getName();
-
-	String getDisplayName();
+public interface MessageReceiver extends Entity {
 
 }
