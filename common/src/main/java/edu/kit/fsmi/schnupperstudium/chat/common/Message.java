@@ -1,13 +1,14 @@
 package edu.kit.fsmi.schnupperstudium.chat.common;
 
-
 public interface Message {
 
 	String getText();
 
+	Attachement getAttachement();
+
 	long getTimestamp();
 
-	MessageSender getSender();
+	ChatEntity getSender();
 
-	MessageReceiver getReceiver();
+	ChatEntity getReceiver();
 }

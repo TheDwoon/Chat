@@ -1,18 +1,14 @@
 package edu.kit.fsmi.schnupperstudium.chat.common;
 
 import java.awt.image.BufferedImage;
-import java.util.List;
 
-public interface Group extends MessageReceiver {
+public interface ChatEntity {
 
-	@Override
 	String getName();
 
-	@Override
 	String getDisplayName();
 
-	List<User> getMembers();
+	String getDescription();
 
 	BufferedImage getPicture();
-
 }
