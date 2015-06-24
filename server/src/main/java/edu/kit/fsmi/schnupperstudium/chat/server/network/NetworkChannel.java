@@ -4,19 +4,30 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class NetworkChannel {
-	private Socket socket;
-	private DataOutputStream output;
-	private DataInputStream input;
-
+	private static final Logger LOG = LogManager.getLogger();
+	
+	private final Socket socket;
+	private final DataOutputStream output;
+	private final DataInputStream input;
+	private final List<PacketExecutor> executors;
+	private final Network network;
+	
 	private boolean closed;
 
-	public NetworkChannel(Socket socket) throws IOException {
+	public NetworkChannel(Network network, Socket socket) throws IOException {
+		this.network = network;
 		this.socket = socket;
 		this.input = new DataInputStream(socket.getInputStream());
 		this.output = new DataOutputStream(socket.getOutputStream());
+		this.executors = new ArrayList<>();
 
 		new Thread(new Listener(), "Listener ["
 				+ socket.getRemoteSocketAddress().toString() + "]").start();
@@ -50,7 +61,7 @@ public class NetworkChannel {
 	 *            exception that caused closing or null.
 	 */
 	private void onClose(Exception cause) {
-		// TODO implement.
+		network.removeChannel(this);
 	}
 
 	public final void close() {
@@ -72,7 +83,22 @@ public class NetworkChannel {
 			onClose(e);
 		}
 
+		LOG.info("[" + socket.getRemoteSocketAddress() + "] connection closed: " 
+				+ ((cause == null) ? "quit" : cause.getMessage()));
+		
 		closed = true;
+	}
+
+	public void addExecutor(PacketExecutor exectuor) {
+		if (exectuor == null) {
+			return;
+		}
+		
+		executors.add(exectuor);
+	}
+	
+	public Network getNetwork() {
+		return network;
 	}
 
 	private final class Listener implements Runnable {
