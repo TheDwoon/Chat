@@ -2,11 +2,11 @@ package edu.kit.fsmi.schnupperstudium.chat.common.network;
 
 import java.util.HashMap;
 
-public class Stage implements PacketExecutor {
+public class ExecutorSet implements PacketExecutor {
 	private HashMap<Integer, PacketExecutor> executors;
 	private PacketExecutor defaultExecutor;
 	
-	public Stage() {
+	public ExecutorSet() {
 		executors = new HashMap<>();		
 	}
 	
