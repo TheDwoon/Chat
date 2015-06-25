@@ -37,6 +37,13 @@ public class NetworkChannel {
 				+ socket.getRemoteSocketAddress().toString() + "]").start();
 	}
 
+	/** 
+	 * Writes a packet.
+	 * This method will block until the packet was sent.
+	 * 
+	 * @param packet packet to send.
+	 * @throws IOException if an I/O error occurs.
+	 */
 	public final void sendPacket(Packet packet) throws IOException {
 		if (packet == null) {
 			return;
@@ -77,7 +84,9 @@ public class NetworkChannel {
 	 *            exception that caused closing or null.
 	 */
 	private void onClose(Exception cause) {
-		network.removeChannel(this);
+		if (network != null) {
+			network.removeChannel(this);
+		}
 	}
 
 	public final void close() {
@@ -115,6 +124,36 @@ public class NetworkChannel {
 		}
 	}
 	
+	/**
+	 * Removes all executors and adds the given one.
+	 * If <code>executor</code> is null it will only 
+	 * remove all executors.
+	 * 
+	 * @param executor executor or null.
+	 */
+	public void setExecutor(PacketExecutor executor) {
+		synchronized (executors) {
+			executors.clear();
+			
+			if (executor != null) {
+				executors.add(executor);
+			}			
+		}
+	}
+	
+	public void removeExecutor(PacketExecutor executor) {
+		if (executor == null) {
+			return;
+		}
+		
+		synchronized (executors) {
+			executors.remove(executor);
+		}
+	}
+	
+	/**
+	 * @return associated network or null.
+	 */
 	public Network getNetwork() {
 		return network;
 	}
