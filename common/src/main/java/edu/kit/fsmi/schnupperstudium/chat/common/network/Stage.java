@@ -1,4 +1,4 @@
-package edu.kit.fsmi.schnupperstudium.chat.server.network;
+package edu.kit.fsmi.schnupperstudium.chat.common.network;
 
 import java.util.HashMap;
 

@@ -1,15 +1,12 @@
 package edu.kit.fsmi.schnupperstudium.chat.common.network;
 
-import java.util.Objects;
 
 public class Packet {
-	private final PacketType type;
+	private final int id;
 	private final byte[] data;
 
-	public Packet(final PacketType type, final byte[] data) {
-		Objects.requireNonNull(type);
-		
-		this.type = type;
+	public Packet(final int id, final byte[] data) {	
+		this.id = id;
 		
 		if (data == null) {
 			this.data = new byte[0];
@@ -18,14 +15,10 @@ public class Packet {
 		}
 	}
 
-	public PacketType getType() {
-		return type;
-	}
-
 	public int getId() {
-		return type.getId();
+		return id;
 	}
-	
+		
 	public byte[] getData() {
 		return data;
 	}
