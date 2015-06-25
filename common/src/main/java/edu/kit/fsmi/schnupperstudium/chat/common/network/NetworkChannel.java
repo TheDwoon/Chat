@@ -54,7 +54,19 @@ public class NetworkChannel {
 	 * @param packet packet read.
 	 */
 	private void onPacket(Packet packet) {
-		// TODO implement.
+		if (packet == null) {
+			return;
+		}
+		
+		synchronized (executors) {
+			for (PacketExecutor executor : executors) {
+				if (executor.executePacket(this, packet)) {
+					return;
+				}
+			}
+		}
+		
+		LOG.debug("Could not find an executer: " + packet.getId());
 	}
 
 	/**
@@ -98,7 +110,9 @@ public class NetworkChannel {
 			return;
 		}
 		
-		executors.add(exectuor);
+		synchronized (executors) {
+			executors.add(exectuor);			
+		}
 	}
 	
 	public Network getNetwork() {
