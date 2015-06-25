@@ -5,6 +5,9 @@ import java.io.DataInputStream;
 
 
 public class Packet {
+	public static final int REQ_AUTH = 1;
+	public static final int RPL_AUTH = 2;
+	
 	private final int id;
 	private final byte[] data;
 

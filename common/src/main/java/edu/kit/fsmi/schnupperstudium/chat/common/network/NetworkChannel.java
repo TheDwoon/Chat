@@ -10,6 +10,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.kit.fsmi.schnupperstudium.chat.common.config.MemoryConfiguration;
+
 
 public class NetworkChannel {
 	private static final Logger LOG = LogManager.getLogger();
@@ -19,6 +21,7 @@ public class NetworkChannel {
 	private final DataInputStream input;
 	private final List<PacketExecutor> executors;
 	private final Network network;
+	private final MemoryConfiguration configuration;
 	
 	private boolean closed;
 
@@ -29,6 +32,7 @@ public class NetworkChannel {
 	public NetworkChannel(Network network, Socket socket) throws IOException {
 		this.network = network;
 		this.socket = socket;
+		this.configuration = new MemoryConfiguration();
 		this.input = new DataInputStream(socket.getInputStream());
 		this.output = new DataOutputStream(socket.getOutputStream());
 		this.executors = new ArrayList<>();
@@ -156,6 +160,10 @@ public class NetworkChannel {
 	 */
 	public Network getNetwork() {
 		return network;
+	}
+
+	public MemoryConfiguration getConfiguration() {
+		return configuration;
 	}
 
 	@Override
