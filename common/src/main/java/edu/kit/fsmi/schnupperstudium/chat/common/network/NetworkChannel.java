@@ -22,6 +22,10 @@ public class NetworkChannel {
 	
 	private boolean closed;
 
+	public NetworkChannel(Socket socket) throws IOException {
+		this(null, socket);
+	}
+	
 	public NetworkChannel(Network network, Socket socket) throws IOException {
 		this.network = network;
 		this.socket = socket;
