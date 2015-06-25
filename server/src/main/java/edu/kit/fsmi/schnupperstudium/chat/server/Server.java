@@ -18,6 +18,10 @@ public class Server {
 	private final HashMap<String, User> users = new HashMap<>();
 	private final ExecutorSet authStage;
 	
+	public Server() throws IOException {
+		this(PORT);
+	}
+	
 	public Server(int port) throws IOException {
 		this.authStage = new ExecutorSet();
 		this.network = new Network((channel) -> { channel.setExecutor(authStage); }, port);
@@ -32,4 +36,9 @@ public class Server {
 		});
 	}
 
+	public User getUser(String nick) {
+		synchronized (users) {
+			return users.get(nick);
+		}
+	}
 }

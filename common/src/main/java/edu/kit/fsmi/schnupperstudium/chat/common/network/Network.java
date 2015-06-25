@@ -48,7 +48,7 @@ public final class Network {
 		public void run() {
 			LOG.info("Network bound to port " + port + "!");
 			
-			while (!server.isClosed()) {
+			while (!isInterrupted() && !server.isClosed()) {
 				try {
 					server.setSoTimeout(1000);
 				} catch (SocketException e1) {
