@@ -158,6 +158,11 @@ public class NetworkChannel {
 		return network;
 	}
 
+	@Override
+	public String toString() {		
+		return "[" + socket.getRemoteSocketAddress() + "]";
+	}
+	
 	private final class Listener implements Runnable {
 		@Override
 		public void run() {
