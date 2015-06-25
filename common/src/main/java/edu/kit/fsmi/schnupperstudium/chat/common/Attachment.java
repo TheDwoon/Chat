@@ -1,4 +1,4 @@
-package edu.kit.fsmi.schnupperstudium.chat.server;
+package edu.kit.fsmi.schnupperstudium.chat.common;
 
 import java.util.Objects;
 
