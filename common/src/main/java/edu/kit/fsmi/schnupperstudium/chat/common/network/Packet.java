@@ -29,7 +29,7 @@ public class Packet {
 		return data;
 	}
 
-	public DataInputStream getInputStream() {
-		return new DataInputStream(new ByteArrayInputStream(data));
+	public PacketInputStream getInputStream() {
+		return new PacketInputStream(new ByteArrayInputStream(data));
 	}
 }
