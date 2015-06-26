@@ -1,7 +1,6 @@
 package edu.kit.fsmi.schnupperstudium.chat.common.network;
 
 import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 
 
 public class Packet {
@@ -31,5 +30,10 @@ public class Packet {
 
 	public PacketInputStream getInputStream() {
 		return new PacketInputStream(new ByteArrayInputStream(data));
+	}
+	
+	@Override
+	public String toString() {
+		return "Packet [id=" + id + ", size=" + data.length + "]";
 	}
 }

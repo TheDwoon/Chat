@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" name="KaMaRo">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{1} - %msg%n"/>
+		</Console>
+		<File name="DebugFileAppender" fileName="logs/trace.log" append="false">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
+	</Appenders>
+	<Loggers>
+		<Root level="all">
+			<AppenderRef ref="Console"/>
+			<AppenderRef ref="DebugFileAppender"/>
+		</Root>
+	</Loggers>
+</Configuration>

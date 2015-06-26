@@ -65,9 +65,12 @@ public class NetworkChannel {
 	 * @param packet packet read.
 	 */
 	private void onPacket(Packet packet) {
+		System.out.println(packet);
 		if (packet == null) {
 			return;
 		}
+		
+		System.out.println("HELLO");
 		
 		synchronized (executors) {
 			for (PacketExecutor executor : executors) {
@@ -186,6 +189,7 @@ public class NetworkChannel {
 					packet = new Packet(id, data);
 				} catch (IOException e) {
 					close(e);
+					break;
 				}
 				
 				try {

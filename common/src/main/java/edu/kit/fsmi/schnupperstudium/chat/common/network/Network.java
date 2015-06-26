@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,8 +59,11 @@ public final class Network {
 				Socket socket = null; 
 				try {
 					socket = server.accept();
+				} catch (SocketTimeoutException e) {
+					// ignore
+					continue;
 				} catch (IOException e) {
-					LOG.fatal("server socket broke down");
+					LOG.fatal("server socket broke down: " + e.getMessage());
 					break;
 				}
 				
@@ -77,5 +81,21 @@ public final class Network {
 			
 			LOG.info("Network on port " + port + " shutdown!");
 		}
+	}
+
+	public void close() throws IOException {
+		LOG.info("Stopping accepting connections");
+		
+		listener.interrupt();		
+		server.close();
+		
+		LOG.info("Closing opened connections...");
+		synchronized (channels) {
+			for (NetworkChannel channel : channels) {
+				channel.close();
+			}
+		}
+		
+		LOG.info("Network shutdown complete!");
 	}
 }
