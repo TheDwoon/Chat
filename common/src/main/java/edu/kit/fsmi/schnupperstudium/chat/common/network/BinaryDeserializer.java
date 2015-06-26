@@ -5,5 +5,4 @@ import java.io.IOException;
 
 public interface BinaryDeserializer<T> {
 	T deserialize(DataInputStream output) throws IOException;
-	
 }
