@@ -36,6 +36,7 @@ public class LoginExecutor implements PacketExecutor {
 		}
 		
 		if (name.isEmpty() || password.isEmpty()) {
+			channel.sendPacket(new Packet(Packet.RPL_AUTH, 0));
 			return true;
 		}
 		
@@ -44,11 +45,11 @@ public class LoginExecutor implements PacketExecutor {
 		// FIXME check password
 		User user = server.getUser(name);		
 		user.setDisplayName(displayName);
+		 
+		channel.getConfiguration().set("user", user);
 		
-		channel.getConfiguration().set("name", name);
-		
-		// TODO change stage to authed.
-		
+		channel.sendPacket(new Packet(Packet.RPL_AUTH, 1));
+	
 		return true;
 	}
 

@@ -54,6 +54,7 @@ public class Server {
 		if (user == null) {
 			// TODO load user from file
 			user = new User(nick);
+			users.put(nick, user);
 		}
 		
 		return user;
