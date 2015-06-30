@@ -10,6 +10,10 @@ public class Packet {
 	private final int id;
 	private final byte[] data;
 
+	public Packet(final int id, byte data) {
+		this(id, new byte[] { data });
+	}
+	
 	public Packet(final int id, final byte[] data) {	
 		this.id = id;
 		
