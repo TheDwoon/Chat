@@ -3,7 +3,8 @@ package edu.kit.fsmi.schnupperstudium.chat.common.network;
 import java.util.HashMap;
 
 public class ExecutorSet implements PacketExecutor {
-	private HashMap<Integer, PacketExecutor> executors;
+	private final HashMap<Integer, PacketExecutor> executors;
+	
 	private PacketExecutor defaultExecutor;
 	
 	public ExecutorSet() {
@@ -26,7 +27,7 @@ public class ExecutorSet implements PacketExecutor {
 			executor = defaultExecutor;
 		}
 		
-		if (defaultExecutor != null) {
+		if (executor != null) {
 			return executor.executePacket(channel, packet);
 		}
 		

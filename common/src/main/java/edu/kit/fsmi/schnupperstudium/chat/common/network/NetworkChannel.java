@@ -23,6 +23,7 @@ public class NetworkChannel {
 	private final List<PacketExecutor> executors;
 	private final Network network;
 	private final MemoryConfiguration configuration;
+	private final Thread listener;
 	
 	private boolean closed;
 
@@ -38,10 +39,14 @@ public class NetworkChannel {
 		this.output = new DataOutputStream(socket.getOutputStream());
 		this.executors = new ArrayList<>();
 
-		new Thread(new Listener(), "Listener ["
-				+ socket.getRemoteSocketAddress().toString() + "]").start();
+		this.listener = new Thread(new Listener(), "Listener ["
+				+ socket.getRemoteSocketAddress().toString() + "]");
 	}
 
+	void start() {
+		listener.start();
+	}
+	
 	/** 
 	 * Writes a packet.
 	 * This method will block until the packet was sent.

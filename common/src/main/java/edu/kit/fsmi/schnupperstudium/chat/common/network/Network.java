@@ -70,6 +70,7 @@ public final class Network {
 				try {
 					NetworkChannel channel = new NetworkChannel(Network.this, socket);
 					initializer.initChannel(channel);
+					channel.start();
 					
 					synchronized (channels) {
 						channels.add(channel);

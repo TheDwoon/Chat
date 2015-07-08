@@ -1,6 +1,7 @@
 package edu.kit.fsmi.schnupperstudium.chat.common.network;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -35,10 +36,6 @@ public final class RMITest {
 		}, PORT);
 		
 		client = new NetworkChannel(new Socket("127.0.0.1", PORT));
-		
-		while (server == null) {
-			Thread.sleep(1);
-		}
 	}
 
 	@Test (timeout = 1000)
@@ -55,6 +52,8 @@ public final class RMITest {
 	
 	@Test (timeout = 1000)
 	public void simpleCheck() throws InterruptedException {
+		Packet packet = new Packet(1, new byte[] { 0, 0, 0, 42 });
+		client.sendPacket(packet);
 		
 		while (!called) {
 			Thread.sleep(1);
@@ -73,6 +72,8 @@ public final class RMITest {
 	}
 	
 	public void simpleCall(int magicValue) {
+		assertEquals(42, magicValue);
+		
 		called = true;
 	}
 }

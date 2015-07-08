@@ -2,11 +2,8 @@ package edu.kit.fsmi.schnupperstudium.chat.common.network;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
-import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +48,7 @@ public final class RMIAdapter implements PacketExecutor {
 	public boolean executePacket(NetworkChannel channel, Packet packet) {
 		Object[] parameters = new Object[parameterTypes.length];	
 		int i = 0;
-		if (NetworkChannel.class.isAssignableFrom(parameterTypes[0])) {
+		if (parameters.length > 0 && NetworkChannel.class.isAssignableFrom(parameterTypes[0])) {
 			parameters[i++] = channel;
 		}
 		
