@@ -7,6 +7,10 @@ public final class User {
 	private String nick;
 	private NetworkChannel channel;
 	
+	public User(String user) {
+		this(user, user);
+	}
+	
 	public User(String user, String nick) {
 		if (user == null || user.isEmpty()) {
 			throw new IllegalArgumentException("user was null or empty");
@@ -44,5 +48,9 @@ public final class User {
 	 */
 	public String getNick() {
 		return nick;
+	}
+	
+	public void setNick(String nick) {
+		this.nick = nick;
 	}
 }

@@ -79,8 +79,12 @@ public class NetworkChannel {
 		
 		synchronized (executors) {
 			for (PacketExecutor executor : executors) {
-				if (executor.executePacket(this, packet)) {
-					return;
+				try {
+					if (executor.executePacket(this, packet)) {
+						return;
+					}
+				} catch (IOException e) {
+					LOG.error("Error parsing packet: " + packet.getId());
 				}
 			}
 		}

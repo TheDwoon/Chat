@@ -1,5 +1,6 @@
 package edu.kit.fsmi.schnupperstudium.chat.common.network;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class ExecutorSet implements PacketExecutor {
@@ -15,7 +16,7 @@ public class ExecutorSet implements PacketExecutor {
 	}
 
 	@Override
-	public boolean executePacket(NetworkChannel channel, Packet packet) {
+	public boolean executePacket(NetworkChannel channel, Packet packet) throws IOException {
 		if (packet == null) {
 			return false;
 		}

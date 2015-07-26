@@ -6,11 +6,11 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.kit.fsmi.schnupperstudium.chat.common.User;
 import edu.kit.fsmi.schnupperstudium.chat.common.network.NetworkChannel;
 import edu.kit.fsmi.schnupperstudium.chat.common.network.Packet;
 import edu.kit.fsmi.schnupperstudium.chat.common.network.PacketExecutor;
 import edu.kit.fsmi.schnupperstudium.chat.server.Server;
+import edu.kit.fsmi.schnupperstudium.chat.server.User;
 
 public class LoginExecutor implements PacketExecutor {	
 	private static final Logger LOG = LogManager.getLogger();
@@ -22,18 +22,13 @@ public class LoginExecutor implements PacketExecutor {
 	}
 	
 	@Override
-	public boolean executePacket(NetworkChannel channel, Packet packet) {		
+	public boolean executePacket(NetworkChannel channel, Packet packet) throws IOException {		
 		DataInputStream input = packet.getInputStream();
 			
-		String name, displayName, password;
-		try {
-			name = input.readUTF();
-			displayName = input.readUTF();
-			password = input.readUTF();
-		} catch (IOException e) {
-			LogManager.getLogger().error(channel + " missing nick and/or password: " + packet.getId());
-			return true;
-		}
+		String name = input.readUTF();
+		String displayName = input.readUTF();
+		String password = input.readUTF();
+
 		
 		if (name.isEmpty() || password.isEmpty()) {
 			channel.sendPacket(new Packet(Packet.RPL_AUTH, 0));
@@ -44,7 +39,7 @@ public class LoginExecutor implements PacketExecutor {
 		
 		// FIXME check password
 		User user = server.getUser(name);		
-		user.setDisplayName(displayName);
+		user.setNick(displayName);
 		 
 		channel.getConfiguration().set("user", user);
 		
