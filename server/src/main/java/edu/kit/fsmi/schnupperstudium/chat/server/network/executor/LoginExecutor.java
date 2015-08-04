@@ -44,13 +44,23 @@ public class LoginExecutor implements Consumer<ReceivedPacket> {
 		
 		LOG.info(String.format("name=%s, displayName=%s, password=%s", name, displayName, password));
 		
-		// FIXME check password
-		User user = server.getUser(name);		
+		User user = server.getUser(name);	
+		if (user.hasPassword()) {
+			if (!user.getPassword().equals(password)) {
+				LOG.info("Failed login for: " + user.getUser());
+				return;
+			}
+		} else {
+			user.setPassword(password);
+		}
+		
 		user.setNick(displayName);
 		 
 		packet.getChannel().getConfiguration().set("user", user);
 		
 		packet.getChannel().sendPacket(new Packet(Packet.RPL_AUTH, 1));
+		
+		LOG.info(user.getUser() + " logged in as " + user.getNick());
 	}
 
 }

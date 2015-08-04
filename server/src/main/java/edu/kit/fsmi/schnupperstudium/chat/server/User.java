@@ -4,7 +4,10 @@ import edu.kit.fsmi.schnupperstudium.chat.common.network.NetworkChannel;
 
 public final class User {
 	private final String user;
+	
 	private String nick;
+	private String password;
+	
 	private NetworkChannel channel;
 	
 	public User(String user) {
@@ -12,6 +15,10 @@ public final class User {
 	}
 	
 	public User(String user, String nick) {
+		this(user, nick, null);
+	}
+	
+	public User(String user, String nick, String password) {
 		if (user == null || user.isEmpty()) {
 			throw new IllegalArgumentException("user was null or empty");
 		}
@@ -22,6 +29,7 @@ public final class User {
 		} else {
 			this.nick = nick;
 		}
+		this.password = password;
 	}
 
 	public void kick() {
@@ -52,5 +60,17 @@ public final class User {
 	
 	public void setNick(String nick) {
 		this.nick = nick;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public boolean hasPassword() {
+		return password != null && !password.isEmpty();
 	}
 }
