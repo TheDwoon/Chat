@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +21,7 @@ public class NetworkChannel {
 	private final Socket socket;
 	private final DataOutputStream output;
 	private final DataInputStream input;
-	private final List<PacketExecutor> executors;
+	private final List<Consumer<ReceivedPacket>> executors;
 	private final Network network;
 	private final MemoryConfiguration configuration;
 	
@@ -72,24 +73,16 @@ public class NetworkChannel {
 	 * 
 	 * @param packet packet read.
 	 */
-	private void onPacket(Packet packet) {
+	private void onPacket(ReceivedPacket packet) {
 		if (packet == null) {
 			return;
 		}
 		
 		synchronized (executors) {
-			for (PacketExecutor executor : executors) {
-				try {
-					if (executor.executePacket(this, packet)) {
-						return;
-					}
-				} catch (IOException e) {
-					LOG.error("Error parsing packet: " + packet.getId());
-				}
+			for (Consumer<ReceivedPacket> executor : executors) {
+				executor.accept(packet);
 			}
 		}
-		
-		LOG.debug("Could not find an executer: " + packet.getId());
 	}
 
 	/**
@@ -130,7 +123,7 @@ public class NetworkChannel {
 		closed = true;
 	}
 
-	public void addExecutor(PacketExecutor exectuor) {
+	public void addExecutor(Consumer<ReceivedPacket> exectuor) {
 		if (exectuor == null) {
 			return;
 		}
@@ -147,7 +140,7 @@ public class NetworkChannel {
 	 * 
 	 * @param executor executor or null.
 	 */
-	public void setExecutor(PacketExecutor executor) {
+	public void setExecutor(Consumer<ReceivedPacket> executor) {
 		synchronized (executors) {
 			executors.clear();
 			
@@ -157,7 +150,7 @@ public class NetworkChannel {
 		}
 	}
 	
-	public void removeExecutor(PacketExecutor executor) {
+	public void removeExecutor(Consumer<ReceivedPacket> executor) {
 		if (executor == null) {
 			return;
 		}
@@ -187,7 +180,7 @@ public class NetworkChannel {
 		@Override
 		public void run() {
 			while (!socket.isClosed() && socket.isConnected()) {
-				Packet packet = null;
+				ReceivedPacket packet = null;
 				
 				try {
 					int id = input.readInt();
@@ -195,7 +188,7 @@ public class NetworkChannel {
 					byte data[] = new byte[length];
 					input.readFully(data);		
 					
-					packet = new Packet(id, data);
+					packet = new ReceivedPacket(NetworkChannel.this, id, data);
 				} catch (IOException e) {
 					close(e);
 					break;

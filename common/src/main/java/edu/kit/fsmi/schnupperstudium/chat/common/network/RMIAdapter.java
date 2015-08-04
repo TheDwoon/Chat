@@ -6,12 +6,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public final class RMIAdapter implements PacketExecutor {
+public final class RMIAdapter implements Consumer<ReceivedPacket> {
 	private static final HashMap<Class<?>, BinaryDeserializer<?>> PARSERS = new HashMap<>();
 	private static final Logger LOG = LogManager.getLogger();
 	
@@ -48,12 +49,12 @@ public final class RMIAdapter implements PacketExecutor {
 	}
 
 	@Override
-	public boolean executePacket(NetworkChannel channel, Packet packet) {
+	public void accept(ReceivedPacket packet) {
 		Object[] parameters = new Object[parameterTypes.length];	
 		int i = 0;
 		if (NetworkChannel.class.isAssignableFrom(parameterTypes[0])) {
-			parameters[i++] = channel;
-		}
+			parameters[i++] = packet.getChannel();
+		} 
 		
 		DataInputStream input = packet.getInputStream();
 		while (i < parameters.length) {
@@ -62,7 +63,7 @@ public final class RMIAdapter implements PacketExecutor {
 				deserializer.deserialize(input);
 			} catch (IOException e) {
 				LOG.error("Caught exception during RMI decoding: ", e);
-				return false;
+				return;
 			}
 			
 			i++;
@@ -78,10 +79,10 @@ public final class RMIAdapter implements PacketExecutor {
 			method.invoke(target, parameters);
 		} catch (Exception e) {
 			LOG.catching(e);
-			return false;
+			return;
 		} 
 		
-		return true;
+		return;
 	}
 
 	public static <T> void addParser(Class<T> clazz, BinaryDeserializer<T> deserializer) {

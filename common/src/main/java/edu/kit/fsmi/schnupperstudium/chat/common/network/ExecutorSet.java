@@ -1,40 +1,38 @@
 package edu.kit.fsmi.schnupperstudium.chat.common.network;
 
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
-public class ExecutorSet implements PacketExecutor {
-	private HashMap<Integer, PacketExecutor> executors;
-	private PacketExecutor defaultExecutor;
+public class ExecutorSet implements Consumer<ReceivedPacket> {
+	private HashMap<Integer, Consumer<ReceivedPacket>> executors;
+	private Consumer<ReceivedPacket> defaultExecutor;
 	
 	public ExecutorSet() {
 		executors = new HashMap<>();		
 	}
 	
-	public void setDefaultExecutor(PacketExecutor defaultExecutor) {
+	public void setDefaultExecutor(Consumer<ReceivedPacket> defaultExecutor) {
 		this.defaultExecutor = defaultExecutor;
 	}
 
 	@Override
-	public boolean executePacket(NetworkChannel channel, Packet packet) throws IOException {
+	public void accept(ReceivedPacket packet) {
 		if (packet == null) {
-			return false;
+			return;
 		}
 		
-		PacketExecutor executor = executors.get(packet.getId());
+		Consumer<ReceivedPacket> executor = executors.get(packet.getId());
 		
 		if (executor == null) {
 			executor = defaultExecutor;
 		}
 		
 		if (defaultExecutor != null) {
-			return executor.executePacket(channel, packet);
-		}
-		
-		return false;
+			executor.accept(packet);;
+		}	
 	}
 	
-	public void addExecutor(int packetId, PacketExecutor executor) {
+	public void addExecutor(int packetId, Consumer<ReceivedPacket> executor) {
 		executors.put(packetId, executor);
 	}
 	

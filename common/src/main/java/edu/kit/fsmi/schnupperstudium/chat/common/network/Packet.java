@@ -7,8 +7,8 @@ public class Packet {
 	public static final int REQ_AUTH = 1;
 	public static final int RPL_AUTH = 2;
 	
-	private final int id;
-	private final byte[] data;
+	protected final int id;
+	protected final byte[] data;
 
 	public Packet(final int id, int data) {
 		this(id, (byte) data);
@@ -28,15 +28,15 @@ public class Packet {
 		}
 	}
 
-	public int getId() {
+	public final int getId() {
 		return id;
 	}
 		
-	public byte[] getData() {
+	public final byte[] getData() {
 		return data;
 	}
 
-	public PacketInputStream getInputStream() {
+	public final PacketInputStream getInputStream() {
 		return new PacketInputStream(new ByteArrayInputStream(data));
 	}
 	
