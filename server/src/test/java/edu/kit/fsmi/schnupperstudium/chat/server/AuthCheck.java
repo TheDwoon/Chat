@@ -10,22 +10,21 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.kit.fsmi.schnupperstudium.chat.common.User;
 import edu.kit.fsmi.schnupperstudium.chat.common.network.NetworkChannel;
 import edu.kit.fsmi.schnupperstudium.chat.common.network.Packet;
 import edu.kit.fsmi.schnupperstudium.chat.common.network.PacketOutputStream;
 
 public class AuthCheck {	
-	private Server server;
+	private Core server;
 	
 	@Before
 	public void launchServer() throws IOException {
-		server = new Server();
+		server = new Core();
 	}
 	
 	@Test
 	public void checkAuth() throws IOException, InterruptedException {
-		Socket socket = new Socket("127.0.0.1", Server.PORT);
+		Socket socket = new Socket("127.0.0.1", Core.PORT);
 		NetworkChannel channel = new NetworkChannel(socket);
 		
 		PacketOutputStream pos = new PacketOutputStream();
@@ -45,9 +44,9 @@ public class AuthCheck {
 		User user = server.getUser("daniel");
 		
 		assertNotNull(user);
-		
-		assertEquals("daniel", user.getName());
-		assertEquals("TheDwoon", user.getDisplayName());
+			
+		assertEquals("daniel", user.getUser());
+		assertEquals("TheDwoon", user.getNick());
 	}
 	
 	@After
