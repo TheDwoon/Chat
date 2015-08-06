@@ -9,6 +9,7 @@ import jdw.chat.common.event.ConsumerSet.ConsumerPriority;
 public class ConsumerSetTest {
 	private boolean aCalled = false;
 	private boolean bCalled = false;
+	private boolean oCalled = false;
 	
 	@Test
 	public void test() {
@@ -18,11 +19,13 @@ public class ConsumerSetTest {
 			assertFalse(bCalled);
 		}, ConsumerPriority.HIGH);
 		set.addConsumer(B.class, event -> bCalled = true);
+		set.addConsumer(Object.class, event -> oCalled = true);
 		
 		set.pushEvent(new B());
 		
 		assertTrue(aCalled);
 		assertTrue(bCalled);		
+		assertTrue(oCalled);
 	}
 	
 	public static class A {
