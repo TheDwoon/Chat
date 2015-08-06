@@ -3,6 +3,7 @@ package jdw.chat.common.event;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -37,7 +38,13 @@ public class ConsumerSet {
 			List<Entry<?>> entries = consumers.get(clazz);
 			if (entries != null) {
 				synchronized (entries) {
-					entries.remove(consumer);
+					Iterator<Entry<?>> it = entries.iterator();
+					while (it.hasNext()) {
+						Entry<?> entry = it.next();
+						if (entry.consumer.equals(consumer)) {
+							it.remove();
+						}
+					}
 				}
 			}
 		}
@@ -99,11 +106,6 @@ public class ConsumerSet {
 		@Override
 		public int compareTo(Entry<T> other) {
 			return Integer.compare(this.priority.ordinal(), other.priority.ordinal());
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			return consumer.equals(obj);
 		}
 	}
 }
