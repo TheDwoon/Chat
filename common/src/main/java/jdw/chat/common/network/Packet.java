@@ -1,6 +1,6 @@
 package jdw.chat.common.network;
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 
 public class Packet {
@@ -36,8 +36,8 @@ public class Packet {
 		return data;
 	}
 
-	public final PacketInputStream getInputStream() {
-		return new PacketInputStream(new ByteArrayInputStream(data));
+	public final InputStream getInputStream() {
+		return new PacketInputStream(this);
 	}
 	
 	@Override

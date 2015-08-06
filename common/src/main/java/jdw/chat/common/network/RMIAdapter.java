@@ -56,7 +56,7 @@ public final class RMIAdapter implements Consumer<ReceivedPacket> {
 			parameters[i++] = packet.getChannel();
 		} 
 		
-		DataInputStream input = packet.getInputStream();
+		DataInputStream input = new DataInputStream(packet.getInputStream());
 		while (i < parameters.length) {
 			BinaryDeserializer<?> deserializer = PARSERS.get(parameterTypes[i]);
 			try {
