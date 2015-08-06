@@ -9,6 +9,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import jdw.chat.common.network.ExecutorSet;
+import jdw.chat.common.network.Network;
+import jdw.chat.common.network.NetworkChannel;
+import jdw.chat.common.network.Packet;
+import jdw.chat.common.network.RMIAdapter;
+
 public final class RMITest {
 	private static final int PORT = 6184;
 	
