@@ -1,4 +1,4 @@
-package edu.kit.fsmi.schnupperstudium.chat.common.network;
+package jdw.chat.common.network;
 
 import static org.junit.Assert.assertTrue;
 
