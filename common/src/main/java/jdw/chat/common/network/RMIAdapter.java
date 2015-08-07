@@ -2,17 +2,13 @@ package jdw.chat.common.network;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public final class RMIAdapter implements Consumer<ReceivedPacket> {
+public final class RMIAdapter implements PacketExecutor {
 	private static final HashMap<Class<?>, BinaryDeserializer<?>> PARSERS = new HashMap<>();
 	private static final Logger LOG = LogManager.getLogger();
 	
@@ -49,7 +45,7 @@ public final class RMIAdapter implements Consumer<ReceivedPacket> {
 	}
 
 	@Override
-	public void accept(ReceivedPacket packet) {
+	public void handlePacket(ReceivedPacket packet) throws IOException {
 		Object[] parameters = new Object[parameterTypes.length];	
 		int i = 0;
 		if (NetworkChannel.class.isAssignableFrom(parameterTypes[0])) {

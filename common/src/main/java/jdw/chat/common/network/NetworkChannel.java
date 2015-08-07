@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +20,7 @@ public class NetworkChannel {
 	private final Socket socket;
 	private final DataOutputStream output;
 	private final DataInputStream input;
-	private final List<Consumer<ReceivedPacket>> executors;
+	private final List<PacketExecutor> executors;
 	private final Network network;
 	private final MemoryConfiguration configuration;
 	
@@ -79,8 +78,12 @@ public class NetworkChannel {
 		}
 		
 		synchronized (executors) {
-			for (Consumer<ReceivedPacket> executor : executors) {
-				executor.accept(packet);
+			for (PacketExecutor executor : executors) {
+				try {
+					executor.handlePacket(packet);
+				} catch (IOException e) {
+					LOG.error("Error executing packet "  + packet.getId() + ": " + e.getMessage());
+				}
 			}
 		}
 	}
@@ -123,7 +126,7 @@ public class NetworkChannel {
 		closed = true;
 	}
 
-	public void addExecutor(Consumer<ReceivedPacket> exectuor) {
+	public void addExecutor(PacketExecutor exectuor) {
 		if (exectuor == null) {
 			return;
 		}
@@ -140,7 +143,7 @@ public class NetworkChannel {
 	 * 
 	 * @param executor executor or null.
 	 */
-	public void setExecutor(Consumer<ReceivedPacket> executor) {
+	public void setExecutor(PacketExecutor executor) {
 		synchronized (executors) {
 			executors.clear();
 			
@@ -150,7 +153,7 @@ public class NetworkChannel {
 		}
 	}
 	
-	public void removeExecutor(Consumer<ReceivedPacket> executor) {
+	public void removeExecutor(PacketExecutor executor) {
 		if (executor == null) {
 			return;
 		}

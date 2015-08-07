@@ -2,17 +2,17 @@ package jdw.chat.server.network.executor;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import jdw.chat.common.network.Packet;
+import jdw.chat.common.network.PacketExecutor;
 import jdw.chat.common.network.ReceivedPacket;
 import jdw.chat.server.Core;
 import jdw.chat.server.User;
 
-public class LoginExecutor implements Consumer<ReceivedPacket> {	
+public class LoginExecutor implements PacketExecutor {	
 	private static final Logger LOG = LogManager.getLogger();
 	
 	private final Core server;
@@ -22,20 +22,12 @@ public class LoginExecutor implements Consumer<ReceivedPacket> {
 	}
 	
 	@Override
-	public void accept(ReceivedPacket packet) {		
-		DataInputStream input = packet.getInputStream();
+	public void handlePacket(ReceivedPacket packet) throws IOException {		
+		DataInputStream input = new DataInputStream(packet.getInputStream());
 			
-		String name, displayName, password;
-		
-		try {
-			name = input.readUTF();			
-			displayName = input.readUTF();
-			password = input.readUTF();
-		} catch (IOException e) {
-			LOG.warn("Malformed packet received: " + packet.getChannel());
-			return;
-		}
-
+		String name = input.readUTF();			
+		String displayName = input.readUTF();
+		String password = input.readUTF();
 		
 		if (name.isEmpty() || password.isEmpty()) {
 			packet.getChannel().sendPacket(new Packet(Packet.RPL_AUTH, 0));

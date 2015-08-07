@@ -1,38 +1,38 @@
 package jdw.chat.common.network;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.function.Consumer;
 
-public class ExecutorSet implements Consumer<ReceivedPacket> {
-	private HashMap<Integer, Consumer<ReceivedPacket>> executors;
-	private Consumer<ReceivedPacket> defaultExecutor;
+public class ExecutorSet implements PacketExecutor {
+	private HashMap<Integer, PacketExecutor> executors;
+	private PacketExecutor defaultExecutor;
 	
 	public ExecutorSet() {
 		executors = new HashMap<>();		
 	}
 	
-	public void setDefaultExecutor(Consumer<ReceivedPacket> defaultExecutor) {
+	public void setDefaultExecutor(PacketExecutor defaultExecutor) {
 		this.defaultExecutor = defaultExecutor;
 	}
 
 	@Override
-	public void accept(ReceivedPacket packet) {
+	public void handlePacket(ReceivedPacket packet) throws IOException {
 		if (packet == null) {
 			return;
 		}
 		
-		Consumer<ReceivedPacket> executor = executors.get(packet.getId());
+		PacketExecutor executor = executors.get(packet.getId());
 		
 		if (executor == null) {
 			executor = defaultExecutor;
 		}
 		
 		if (defaultExecutor != null) {
-			executor.accept(packet);;
+			executor.handlePacket(packet);;
 		}	
 	}
 	
-	public void addExecutor(int packetId, Consumer<ReceivedPacket> executor) {
+	public void addExecutor(int packetId, PacketExecutor executor) {
 		executors.put(packetId, executor);
 	}
 	
