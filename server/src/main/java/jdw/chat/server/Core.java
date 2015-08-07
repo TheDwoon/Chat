@@ -44,38 +44,44 @@ public class Core {
 		network.close();
 	}
 
-	public User getUser(String nick) {
-		User user = null;
+	public User getUser(String user) {
+		User u = null;
 		synchronized (users) {
-			user = users.get(nick);
+			u = users.get(user);
 
-			if (user == null) {
+			if (u == null) {
 				// TODO load user from file
-				user = new User(nick);
-				users.put(nick, user);
+				u = new User(user);
+				users.put(user, u);
 			}
 		}
 		
-		
-		return user;
+		return u;
 	}
 
 	public boolean hasConversation(String name) {
 		return getConversation(name) != null;
 	}
 	
-	public Conversation getConversation(String name) {
-		Conversation conversation = null;
-		synchronized (conversations) {
-			conversation = conversations.get(name);
-			// TODO load from file if null
-			
-			if (conversation == null) {
-				conversation = new Conversation(name, name);
-				conversations.put(name, conversation);
-			}
+	public void addConversation(Conversation conversation) {
+		if (conversation == null) {
+			return;
 		}
 		
-		return conversation;
+		synchronized (conversations) {
+			conversations.put(conversation.getName(), conversation);
+		}
+	}
+	
+	public Conversation getConversation(String name) {
+		synchronized (conversations) {
+			return conversations.get(name);			
+		}
+	}
+	
+	public void removeConversation(Conversation conversation) {
+		synchronized (conversations) {
+			conversations.remove(conversation);
+		}
 	}
 }
