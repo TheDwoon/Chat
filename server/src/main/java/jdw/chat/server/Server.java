@@ -9,10 +9,12 @@ import org.apache.logging.log4j.Logger;
 import jdw.chat.common.network.ExecutorSet;
 import jdw.chat.common.network.Network;
 import jdw.chat.common.network.Packet;
+import jdw.chat.server.network.executor.CreateConversation;
+import jdw.chat.server.network.executor.JoinConversation;
 import jdw.chat.server.network.executor.LoginExecutor;
 
-public class Core {
-	private static final Logger LOG = LogManager.getLogger();
+public final class Server {
+	public static final Logger LOG = LogManager.getLogger();
 
 	public static final int PORT = 8965;
 	
@@ -22,14 +24,16 @@ public class Core {
 	
 	private final ExecutorSet executors = new ExecutorSet();
 	
-	public Core() throws IOException {
+	public Server() throws IOException {
 		this(PORT);
 	}
 	
-	public Core(int port) throws IOException {
+	public Server(int port) throws IOException {
 		this.network = new Network((channel) -> { channel.setExecutor(executors); }, port);
 				
 		executors.addExecutor(Packet.REQ_AUTH, new LoginExecutor(this));
+		executors.addExecutor(212, new CreateConversation(this));
+		executors.addExecutor(213, new JoinConversation(this));
 		
 		executors.setDefaultExecutor((packet) -> {
 			LOG.info("Dropped packet " + packet.getId());
@@ -37,7 +41,7 @@ public class Core {
 	}
 	
 	public static void main(final String[] args) throws IOException {
-		new Core();
+		new Server();
 	}
 	
 	public void close() throws IOException {

@@ -6,12 +6,12 @@ import java.io.IOException;
 import jdw.chat.common.network.PacketExecutor;
 import jdw.chat.common.network.ReceivedPacket;
 import jdw.chat.server.Conversation;
-import jdw.chat.server.Core;
+import jdw.chat.server.Server;
 
 public final class CreateConversation implements PacketExecutor {
-	private final Core core;
+	private final Server core;
 	
-	public CreateConversation(Core core) {
+	public CreateConversation(Server core) {
 		this.core = core;
 	}
 	
@@ -30,8 +30,7 @@ public final class CreateConversation implements PacketExecutor {
 			return;
 		}
 		
-		// TODO maybe check password :D
-		Conversation conversation = new Conversation(conversationId, conversationName);		
+		Conversation conversation = new Conversation(conversationId, conversationName, password);		
 		core.addConversation(conversation);
 		
 		input.close();

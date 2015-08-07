@@ -13,20 +13,20 @@ import org.junit.Test;
 import jdw.chat.common.network.NetworkChannel;
 import jdw.chat.common.network.Packet;
 import jdw.chat.common.network.PacketOutputStream;
-import jdw.chat.server.Core;
+import jdw.chat.server.Server;
 import jdw.chat.server.User;
 
 public class AuthCheck {	
-	private Core server;
+	private Server server;
 	
 	@Before
 	public void launchServer() throws IOException {
-		server = new Core();
+		server = new Server();
 	}
 	
 	@Test
 	public void checkAuth() throws IOException, InterruptedException {
-		Socket socket = new Socket("127.0.0.1", Core.PORT);
+		Socket socket = new Socket("127.0.0.1", Server.PORT);
 		NetworkChannel channel = new NetworkChannel(socket);
 		
 		PacketOutputStream pos = new PacketOutputStream();

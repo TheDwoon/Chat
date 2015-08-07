@@ -9,8 +9,13 @@ public final class Conversation {
 	private final List<Message> messages = new LinkedList<>();
 	private final String name;
 	private String displayName;
+	private String password;
 	
 	public Conversation(String name, String displayName) {
+		this(name, displayName, null);
+	}
+	
+	public Conversation(String name, String displayName, String password) {
 		if (name == null || name.isEmpty()) {
 			throw new IllegalArgumentException("name was null or empty");
 		}
@@ -21,6 +26,7 @@ public final class Conversation {
 		} else {
 			this.displayName = displayName;
 		}
+		this.password = password;
 	}
 	
 	public void addUser(User user) {
@@ -76,6 +82,14 @@ public final class Conversation {
 		}
 		
 		return list;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public boolean hasPassword() {
+		return password != null;
 	}
 	
 	public String getName() {

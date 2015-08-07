@@ -9,15 +9,15 @@ import org.apache.logging.log4j.Logger;
 import jdw.chat.common.network.Packet;
 import jdw.chat.common.network.PacketExecutor;
 import jdw.chat.common.network.ReceivedPacket;
-import jdw.chat.server.Core;
+import jdw.chat.server.Server;
 import jdw.chat.server.User;
 
 public class LoginExecutor implements PacketExecutor {	
 	private static final Logger LOG = LogManager.getLogger();
 	
-	private final Core server;
+	private final Server server;
 	
-	public LoginExecutor(Core server) {
+	public LoginExecutor(Server server) {
 		this.server = server;
 	}
 	
